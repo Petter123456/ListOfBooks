@@ -9,20 +9,15 @@ var maxRequests = 10;
 var currentRequests = 0;
 var key = localStorage.getItem('apiAccessKey');
 
-if (key == null) {
+if (key === null) {
     GetNewAccessKey();
 } else {
     UpdateUrl();
     GetBooks();
 }
 
-console.log(insertBook);
-console.log(getBooks);
-console.log(updateBook);
-console.log(deleteBook); 
-
  function AddBook(title, author) {
-     if (currentBookId == -1) {
+     if (currentBookId === -1) {
          fetch(insertBook + '&title=' + title + '&author=' + author)
              .then((response) => {
                  return response.json();
@@ -64,7 +59,7 @@ function ResetForms() {
 }
 
 function GetBooks() {
-    var elements = document.getElementsByClassName("bookListItem");
+    var elements = document.getElementsByClassName("output-item");
     while (elements.length > 0) {
         elements[0].parentNode.removeChild(elements[0]);
     }
@@ -74,18 +69,15 @@ function GetBooks() {
             return response.json();
         })
         .then((myJson) => {
-            if (myJson['data'] == undefined && currentRequests <= maxRequests) {
+            if (myJson['data'] === undefined && currentRequests <= maxRequests) {
                 currentRequests++;
                 GetBooks();
             } else {
-
-                const html = myJson['data'].map(book => { console.log(typeof book.id.toString()); return `<div class="bookListItem"><p>Author: ${book.author} , Title: ${book.title} </p><button onclick="DeleteBook(${book.id})">Delete</button><button onclick="UpdateBook(${book.id}, '${book.title}', '${book.author}')">UpdateBook</button></div>` }).join('');
-                document.querySelector('#allBooks').insertAdjacentHTML('afterbegin', html);
+                const html = myJson['data'].map(book => { console.log(typeof book.id.toString()); return `<div class="output-item"><h3>${book.title}</h3><label>Author</label><br><p>${book.author}</p><button onclick="DeleteBook(${book.id}, '${book.title}', '${book.author}' , true)">Delete</button> <button onclick="UpdateBook(${book.id}, '${book.title}', '${book.author}'); document.getElementById('Form_addBook').scrollIntoView();">Update</button></div>` }).join('');
+                document.querySelector('#output-Books').insertAdjacentHTML('afterbegin', html);
             }
-            console.log(myJson['data']);    
         });
 }
-
 
 function UpdateBook(bookId, title, author) {
     currentBookId = bookId;
@@ -93,22 +85,25 @@ function UpdateBook(bookId, title, author) {
     document.getElementById('author_input').value = author + "";
 }
 
+function DeleteBook(bookId, title, author, firstCall) {
+    if (firstCall){
+        var confirmation = confirm("Are you sure you wish to delete " + title + " by " + author + "?");
+	}
 
-
-function DeleteBook(bookId) {
-    console.log(deleteBook + "&id=" + bookId);
-    fetch(deleteBook + "&id=" + bookId)
+    if(confirmation || !firstCall){
+        fetch(deleteBook + "&id=" + bookId)
         .then((response) => {
             return response.json();
         })
         .then((myJson) => {
             if (myJson.status != "success" && currentRequests <= maxRequests) {
                 currentRequests++;
-                DeleteBook(bookId);
+                DeleteBook(bookId, title, author, false);
             } else {
                 ResetForms();
             }
         });
+	}
 }
 
 function GetNewAccessKey() {
@@ -116,7 +111,7 @@ function GetNewAccessKey() {
     xhReq.send(null);
     var jsonObject = JSON.parse(xhReq.responseText);
     key = jsonObject.key.toString();
-    if (key == null) {
+    if (key === null) {
         GetNewAccessKey();
     } else {
         UpdateUrl();

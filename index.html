@@ -4,81 +4,47 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="true">
 
-    <script src="Script1.js"></script>
+    <script src="BookScripts.js"></script>
 
-    <title></title>
+    <title>My Book Collection</title>
     <link rel="stylesheet" type="text/css" href="index.css">
 
 </head>
 <body>
-    <div class="flex-container">
-        <div id="AddBook">
-
-            <h2>Super duper book collection log</h2>
-
+    <h2>My Book Collection</h2>
+    <div class="menu-container">        
+        <div class="menu-item">
+            <h2>Book</h2>
             <form id="Form_addBook">
+                <div>
                 <label>Title</label>
-                <br />
-                <input type="text" id="title_input" />
-                <br />
+                <br>
+                <input type="text" id="title_input"/>
+                </div>
+                <div>
                 <label>Author</label>
-                <br />
+                <br>
                 <input type="text" id="author_input" />
-                <br />
+                </div>
                 <input type="button"
                        form="Form_addBook"
                        id="Add_Book_Button"
                        value="submit"
                        onclick="AddBook(document.getElementById('title_input').value, document.getElementById('author_input').value)">
             </form>
-
         </div>
-
-        <div>
+        <div class="menu-item">
+            <h2>User</h2>
             <button id="newUser" onclick="GetNewAccessKey()">New User</button>
-        </div>  
-
-        <div>
-            <div id="allBooks"></div>
         </div>
-
     </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-    
-
-    
-    
-    
-
-    
-    
-    
-
-    
-    
-    
-
-
-
+    <div class="output-container">
+        <h2>Collection</h2>
+        <div class="output-book-container" id="output-Books">
+        </div>
+    </div>
 </body>
 </html>
